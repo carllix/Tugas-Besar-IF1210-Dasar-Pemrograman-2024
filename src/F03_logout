@@ -1,1 +1,9 @@
-print ("logout")
+def logout(self):
+        if not self.current_user:
+            print("Logout gagal!")
+            print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
+            return
+
+        print("Logout berhasil untuk", self.current_user.username + ".")
+        self.current_user.logged_in = False
+        self.current_user = None
