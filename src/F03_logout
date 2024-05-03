@@ -6,7 +6,3 @@ def logout(logged_in_user):
     else:
         print("Logout gagal!")
         print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
-
-# Contoh penggunaan
-current_user = "John"
-logout(current_user)
