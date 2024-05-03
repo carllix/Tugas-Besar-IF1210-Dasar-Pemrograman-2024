@@ -1,1 +1,58 @@
-print (f'pe login')
+import pandas as pd
+
+def load_users_from_csv(csv_file):
+    """Membaca data pengguna dari file CSV dan menyimpan dalam dictionary."""
+    df = pd.read_csv(csv_file)
+    users = {}
+    
+    # Iterasi melalui setiap baris DataFrame dan simpan data pengguna dalam dictionary
+    for _, row in df.iterrows():
+        username = row['username']
+        password = row['password']
+        role = row['role']
+        # Simpan informasi pengguna dalam dictionary dengan username sebagai kunci
+        users[username] = {'password': password, 'role': role}
+    
+    return users
+
+def login(users, logged_in_user, username, password):
+    """Menangani proses login dan mengembalikan pesan hasil login."""
+    # Memeriksa apakah pengguna sudah logged in
+    if logged_in_user is not None:
+        return f"Login gagal! Anda telah login dengan username {logged_in_user}, silahkan lakukan 'LOGOUT' sebelum melakukan login kembali.", logged_in_user
+
+    # Memeriksa apakah username terdaftar
+    user_info = users.get(username)
+    if user_info is None:
+        return "Username tidak terdaftar!", logged_in_user
+
+    # Memeriksa apakah password cocok
+    if user_info['password'] != password:
+        return "Password salah!", logged_in_user
+
+    # Set user yang login saat ini
+    logged_in_user = username
+    role = user_info['role']
+    return f"Selamat datang, {role} {username}! Masukkan command 'help' untuk daftar command yang dapat kamu panggil.", logged_in_user
+
+def logout(logged_in_user):
+    """Menangani proses logout dan mengembalikan pesan hasil logout."""
+    # Periksa apakah ada pengguna yang saat ini logged in
+    if logged_in_user is not None:
+        logged_in_user = None
+        return "Anda telah berhasil logout.", logged_in_user
+    else:
+        return "Anda belum login.", logged_in_user
+
+def main():
+    # Path ke file CSV
+    csv_file = 'user.csv'
+    
+    # Membaca data pengguna dari file CSV
+    users = load_users_from_csv(csv_file)
+    
+    # Variabel untuk menyimpan pengguna yang saat ini logged in
+    logged_in_user = None
+
+if __name__ == '__main__':
+    main()
