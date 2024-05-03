@@ -35,15 +35,6 @@ def login(users, logged_in_user, username, password):
     role = user_info['role']
     return f"Selamat datang, {role} {username}! Masukkan command 'help' untuk daftar command yang dapat kamu panggil.", logged_in_user
 
-def logout(logged_in_user):
-    """Menangani proses logout dan mengembalikan pesan hasil logout."""
-    # Periksa apakah ada pengguna yang saat ini logged in
-    if logged_in_user is not None:
-        logged_in_user = None
-        return "Anda telah berhasil logout.", logged_in_user
-    else:
-        return "Anda belum login.", logged_in_user
-
 def main():
     # Path ke file CSV
     csv_file = 'user.csv'
