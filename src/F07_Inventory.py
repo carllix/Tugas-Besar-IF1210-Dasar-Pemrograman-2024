@@ -48,7 +48,7 @@ def inventory(dataUser,dataMonster,dataItemInventory,dataMonsterInventory,userId
         # Cek apakah id merupakan angka
         isNumber = True
         for char in id:
-            if ord(char)<49 or ord(char)>57:
+            if ord(char)<48 or ord(char)>57:
                 isNumber = False
                 break
 
