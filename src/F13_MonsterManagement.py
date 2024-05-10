@@ -25,12 +25,12 @@ def foundMonster(dataMonster:list, newMonster:str) -> bool:
     return False
 
 def displayMonster(dataMonster:list):
-    if len(dataMonster)-1==0:
-        print('Tidak ada data yang dapat ditampilkan...')
-    else:
+    if len(dataMonster)-1>0:
         print(f"{'ID':<3} | {'Type':<15} | {'ATK Power':<9} | {'DEF Power':<9} | HP")
         for i in range(1,len(dataMonster)):
             print(f"{dataMonster[i][0]:<3} | {dataMonster[i][1]:<15} | {dataMonster[i][2]:<9} | {dataMonster[i][3]:<9} | {dataMonster[i][4]}")
+    else:
+        print('Tidak ada data yang dapat ditampilkan...')
 
 def addMonster(dataMonster:list):
     print('Memulai pembuatan monster baru\n')
