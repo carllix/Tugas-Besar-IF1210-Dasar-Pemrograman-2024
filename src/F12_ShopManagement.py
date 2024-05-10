@@ -1,33 +1,15 @@
-from CSV_Handler import *
+from Important_Function import *
 
 dataItemShop = readCSV('data/item_shop.csv')
 dataMonsterShop = readCSV('data/monster_shop.csv')
 dataMonster = readCSV('data/monster.csv')
 dataPotion = ['strength','resilience','healing']
-updateDataMonster = []
-updateDataItem = []
-deleteDataMonster = []
-deleteDataItem = []
 
-def isNum(x):
-    if not x: # Kasus string kosong
-        return False
-    for char in x:
-        if ord(char)<48 or ord(char)>57:
-            return False
-    return True
-
-def getInfoMonsterFromIdMonster(i,dataMonsterShop,dataMonster):
-    monsterId = dataMonsterShop[i][0]
-    for j in range(len(dataMonster)):
-        if dataMonster[j][0] == monsterId:
-            infoMonster = dataMonster[j]
-    return infoMonster
-
-def getMonsterNotInShop(dataMonsterShop,dataMonster):
-    monsterNotInShop = []
+# Mendapatkan data monster yang tidak terdapat di shop
+def getMonsterNotInShop(dataMonsterShop:list,dataMonster:list) -> list:
+    monsterNotInShop:list = []
     for i in range(1,len(dataMonster)):
-        isFound = False
+        isFound:bool = False
         for j in range(1,len(dataMonsterShop)):
             if dataMonster[i][0] == dataMonsterShop[j][0]:
                 isFound = True
@@ -37,10 +19,11 @@ def getMonsterNotInShop(dataMonsterShop,dataMonster):
             monsterNotInShop.append(dataMonster[i])
     return monsterNotInShop
 
-def getPotionNotInShop(dataPotion):
-    potionNotInShop = []
+# Mendapatkan data potion yang tidak terdapat di shop
+def getPotionNotInShop(dataItemShop:list,dataPotion:list) -> list:
+    potionNotInShop:list = []
     for i in range(len(dataPotion)):
-        isFound = False
+        isFound:bool = False
         for j in range(1,len(dataItemShop)):
             if dataPotion[i] == dataItemShop[j][0]:
                 isFound = True
@@ -50,292 +33,308 @@ def getPotionNotInShop(dataPotion):
             potionNotInShop.append(dataPotion[i])
     return potionNotInShop
 
-def displayMonsterShop(dataMonsterShop,dataMonster):
-    print(f"{'ID':<3} | {'Type':<15} | {'ATK Power':<9} | {'DEF Power':<9} | {'HP':<5} | {'Stok':<5} | Harga")
-    for i in range(1,len(dataMonsterShop)):
-        infoMonster = getInfoMonsterFromIdMonster(i,dataMonsterShop,dataMonster)
-        print(f"{dataMonsterShop[i][0]:<3} | {infoMonster[1]:<15} | {infoMonster[2]:<9} | {infoMonster[3]:<9} | {infoMonster[4]:<5} | {dataMonsterShop[i][1]:<5} | {dataMonsterShop[i][2]}")
+# Menampilkan monster yang terdaftar di Shop
+def displayMonsterShop(dataMonsterShop:list,dataMonster:list):
+    if len(dataMonsterShop)-1>0:
+        print(f"{'ID':<3} | {'Type':<15} | {'ATK Power':<9} | {'DEF Power':<9} | {'HP':<5} | {'Stok':<5} | Harga")
+        for monster in dataMonsterShop[1:]:
+            idMonster:str = monster[0]
+            infoMonster:list = getInfoMonsterByIdMonster(idMonster,dataMonster)
+            print(f"{infoMonster[0]:<3} | {infoMonster[1]:<15} | {infoMonster[2]:<9} | {infoMonster[3]:<9} | {infoMonster[4]:<5} | {monster[1]:<5} | {monster[2]}")
+    else:
+        print('Tidak ada data monster pada shop...')
 
-def displayPotionShop(dataItemShop):
-    print(f"{'ID':<3} | {'Type':<20} | {'Stok':<5} | Harga")
-    for i in range(1,len(dataItemShop)):
-        print(f"{i:<3} | {f'{dataItemShop[i][0]} Potion':<20} | {dataItemShop[i][1]:<5} | {dataItemShop[i][2]}")
+# Menampilkan potion yang terdaftar di Shop
+def displayPotionShop(dataItemShop:list):
+    if len(dataItemShop)-1>0:
+        print(f"{'ID':<3} | {'Type':<20} | {'Stok':<5} | Harga")
+        i = 1
+        for potion in dataItemShop[1:]:
+            print(f"{i:<3} | {f'{potion[0].capitalize()} Potion':<20} | {potion[1]:<5} | {potion[2]}")
+            i+=1
+    else:
+        print('Tidak ada data potion pada shop...')
 
 # F12 - SHOP MANAGEMENT
-def shopManagement(dataItemShop,dataMonsterShop,dataMonster):
+def shopManagement(dataItemShop:list,dataMonsterShop:list,dataMonster:list):
     print('Welkamm!\n')
 
-    action = input('>>> Pilih aksi (lihat/tambah/ubah/hapus/keluar): ')
-    
-    while action != 'keluar':
+    while True:
+        action:str = input('>>> Pilih aksi (lihat/tambah/ubah/hapus/keluar): ').lower()
         if action == 'lihat':
-            option = ''
-            while option!='monster' and option!='potion':
-                option = input('>>> Mau lihat apa? (monster/potion): ')
-
+            while True:
+                option:str = input('>>> Mau lihat apa? (monster/potion): ').lower()
                 if option == 'monster': # Melihat monster yang terdaftar di Shop
                     displayMonsterShop(dataMonsterShop,dataMonster)
+                    break
                 elif option == 'potion': # Melihat potion yang terdaftar di Shop
                     displayPotionShop(dataItemShop)
+                    break
                 else:
                     print('Input tidak valid!')
 
         elif action == 'tambah':
-            option = ''
-            while option!='monster' and option!='potion':
-                option = input('>>> Mau nambahin apa? (monster/potion): ')
+            while True:
+                option:str = input('>>> Mau nambahin apa? (monster/potion): ').lower()
 
                 # Menambah monster yang akan di jual
                 if option == 'monster':
                     # Menampilkan seluruh monster yang ada di database tetapi belum ada pada shop
-                    monsterNotInShop = getMonsterNotInShop(dataMonsterShop,dataMonster)
-                    print(f"{'ID':<3} | {'Type':<15} | {'ATK Power':<9} | {'DEF Power':<9} | {'HP':<5}")
-                    for i in range(len(monsterNotInShop)):
-                        print(f"{monsterNotInShop[i][0]:<3} | {monsterNotInShop[i][1]:<15} | {monsterNotInShop[i][2]:<9} | {monsterNotInShop[i][3]:<9} | {monsterNotInShop[i][4]:<5}")
-                    # Validasi input id monster
-                    while True:
-                        newIdMonster = input('>>> Masukkan id monster: ')
-                        isValid = False
-                        for monster in monsterNotInShop:
-                            if monster[0] == newIdMonster:
-                                isValid = True
+                    monsterNotInShop:list = getMonsterNotInShop(dataMonsterShop,dataMonster)
+                    if len(monsterNotInShop)-1>=0:
+                        print(f"{'ID':<3} | {'Type':<15} | {'ATK Power':<9} | {'DEF Power':<9} | {'HP':<5}")
+                        for i in range(len(monsterNotInShop)):
+                            print(f"{monsterNotInShop[i][0]:<3} | {monsterNotInShop[i][1]:<15} | {monsterNotInShop[i][2]:<9} | {monsterNotInShop[i][3]:<9} | {monsterNotInShop[i][4]:<5}")
+                        # Validasi input id monster
+                        while True:
+                            newIdMonster:str = input('>>> Masukkan id monster: ')
+                            isValid:bool = False
+                            for monster in monsterNotInShop:
+                                if monster[0] == newIdMonster:
+                                    isValid = True
+                                    break
+                            if isValid == True:
                                 break
-                        if isValid == True:
-                            break
-                        else:
-                            print('Id Monster tidak valid!')
-                    # Validasi stok awal
-                    while True:
-                        stock = input('>>> Masukkan stok awal: ')
-                        if isNum(stock) == True:
-                            break
-                        else:
-                            print('Stok tidak valid')
-                    # Validasi harga
-                    while True:
-                        price = input('>>> Masukkan harga: ')
-                        if isNum(price) == True:
-                            break
-                        else:
-                            print('Harga tidak valid')
-                            
-                    # Tambah data baru ke dataMonsterShop
-                    newMonsterShop = [newIdMonster,stock,price]
-                    dataMonsterShop.append(newMonsterShop)
-                    print(f'{dataMonster[int(newIdMonster)][1]} telah berhasil ditambahkan ke dalam shop!')
-
+                            else:
+                                print('Id Monster tidak valid!')
+                        # Validasi stok awal
+                        while True:
+                            stock:str = input('>>> Masukkan stok awal: ')
+                            if isNum(stock) == True:
+                                break
+                            else:
+                                print('Stok tidak valid')
+                        # Validasi harga
+                        while True:
+                            price:str = input('>>> Masukkan harga: ')
+                            if isNum(price) == True:
+                                break
+                            else:
+                                print('Harga tidak valid')
+                        # Tambah data baru ke dataMonsterShop
+                        newMonsterShop:list = [newIdMonster,stock,price]
+                        dataMonsterShop.append(newMonsterShop)
+                        print(f'{dataMonster[int(newIdMonster)][1]} telah berhasil ditambahkan ke dalam shop!')
+                    else:
+                        print('Seluruh monster pada database telah ditambahkan pada shop...')
+                    break
 
                 # Menambah potion yang akan di jual
                 elif option == 'potion':
                     # Menampilkan seluruh potion yang ada di database tetapi belum ada pada shop
-                    potionNotInShop = getPotionNotInShop(dataPotion)
-                    print(f"{'ID':<3} | {'Type':<20}")
-                    for i in range(len(potionNotInShop)):
-                        print(f"{len(dataItemShop)+i:<3} | {f'{potionNotInShop[i]} Potion':<20}")
-                    # Validasi input id potion
-                    while True:
-                        newIdPotion = input('>>> Masukkan id potion: ')
-                        if isNum(newIdPotion)==False:
-                            print('Id Potion tidak valid!')
-                        else:
-                            if len(dataItemShop)<=int(newIdPotion)<=len(dataItemShop)+len(potionNotInShop)-1:
+                    potionNotInShop:list = getPotionNotInShop(dataItemShop,dataPotion)
+                    if len(potionNotInShop)-1>=0:
+                        print(f"{'ID':<3} | {'Type':<20}")
+                        for i in range(len(potionNotInShop)):
+                            print(f"{len(dataItemShop)+i:<3} | {f'{potionNotInShop[i].capitalize()} Potion':<20}")
+                        # Validasi input id potion
+                        while True:
+                            newIdPotion:str = input('>>> Masukkan id potion: ')
+                            if isNum(newIdPotion)==False:
+                                print('Id Potion tidak valid!')
+                            else:
+                                if len(dataItemShop)<=int(newIdPotion)<=len(dataItemShop)+len(potionNotInShop)-1:
+                                    break
+                                else:
+                                    print('Id Potion tidak valid!')
+                        # Validasi stok awal
+                        while True:
+                            stock:str = input('>>> Masukkan stok awal: ')
+                            if isNum(stock) == True:
                                 break
                             else:
-                                print('Id Potion tidak valid!')
-                    # Validasi stok awal
-                    while True:
-                        stock = input('>>> Masukkan stok awal: ')
-                        if isNum(stock) == True:
-                            break
-                        else:
-                            print('Stok tidak valid')
-                    # Validasi harga
-                    while True:
-                        price = input('>>> Masukkan harga: ')
-                        if isNum(price) == True:
-                            break
-                        else:
-                            print('Harga tidak valid')
-
-                    # Tambah data baru ke dataItemShop
-                    newItemShop = [potionNotInShop[int(newIdPotion)-len(dataItemShop)],stock,price]
-                    dataItemShop.append(newItemShop)
-                    print(f'{potionNotInShop[int(newIdPotion)-len(dataItemShop)]} Potion telah berhasil ditambahkan ke dalam shop!')
+                                print('Stok tidak valid')
+                        # Validasi harga
+                        while True:
+                            price:str = input('>>> Masukkan harga: ')
+                            if isNum(price) == True:
+                                break
+                            else:
+                                print('Harga tidak valid')
+                        # Tambah data baru ke dataItemShop
+                        newItemShop:list = [potionNotInShop[int(newIdPotion)-len(dataItemShop)],stock,price]
+                        print(f'{potionNotInShop[int(newIdPotion)-len(dataItemShop)].capitalize()} Potion telah berhasil ditambahkan ke dalam shop!')
+                        dataItemShop.append(newItemShop)
+                    else:
+                        print('Seluruh potion pada database telah ditambahkan pada shop...')
+                    break
                 else:
                     print('Input tidak valid!')
 
         elif action == 'ubah':
-            option = ''
-            while option!='monster' and option!='potion':
-                option = input('>>> Mau ubah apa? (monster/potion): ')
+            while True:
+                option:str = input('>>> Mau ubah apa? (monster/potion): ').lower()
                 if option == 'monster':
                     # Menampilkan seluruh monster yang ada di shop
                     displayMonsterShop(dataMonsterShop,dataMonster)
-                    # Validasi input id monster
-                    while True:
-                        updateIdMonster = input('>>> Masukkan id monster: ')
-                        isValid = False
-                        for monster in dataMonsterShop:
-                            if monster[0] == updateIdMonster:
-                                isValid = True
+                    
+                    if len(dataMonsterShop)-1>0:
+                        # Validasi input id monster
+                        while True:
+                            updateIdMonster = input('>>> Masukkan id monster: ')
+                            isValid:bool = False
+                            for monster in dataMonsterShop:
+                                if monster[0] == updateIdMonster:
+                                    isValid = True
+                                    break
+                            if isValid == True:
                                 break
-                        if isValid == True:
-                            break
-                        else:
-                            print('Id Monster tidak valid!')
-                    # Validasi stok baru
-                    while True:
-                        stock = input('>>> Masukkan stok baru: ')
-                        if isNum(stock) == True or not stock:
-                            break
-                        else:
-                            print('Stok tidak valid')
-                    # Validasi harga baru
-                    while True:
-                        price = input('>>> Masukkan harga baru: ')
-                        if isNum(price) == True or not price:
-                            break
-                        else:
-                            print('Harga tidak valid')
+                            else:
+                                print('Id Monster tidak valid!')
+                        # Validasi stok baru
+                        while True:
+                            stock:str = input('>>> Masukkan stok baru: ')
+                            if isNum(stock) == True or not stock:
+                                break
+                            else:
+                                print('Stok tidak valid')
+                        # Validasi harga baru
+                        while True:
+                            price:str = input('>>> Masukkan harga baru: ')
+                            if isNum(price) == True or not price:
+                                break
+                            else:
+                                print('Harga tidak valid')
 
-                    # Menyimpan data yang ingin diupdate ke dalam list sementara
-                    changeDataMonster = [updateIdMonster,stock,price]
-                    updateDataMonster.append(changeDataMonster)
+                        # Update dataMonsterShop dengan data yang baru
+                        dataMonsterShop:list = updateData(dataMonsterShop,updateIdMonster,[updateIdMonster,stock,price])
 
-                    for i in range(len(dataMonster)):
-                        if dataMonster[i][0] == updateIdMonster:
-                            nameMonster = dataMonster[i][1]
-
-                    if not stock and not price:
-                        print(f'Tidak ada data {nameMonster} yang diubah.')
-                    elif not stock:
-                        print(f'{nameMonster} telah berhasil diubah dengan harga baru {price}')
-                    elif not price:
-                        print(f'{nameMonster} telah berhasil diubah dengan stok baru sejumlah {stock}')
+                        nameMonster:str = getInfoMonsterByIdMonster(updateIdMonster,dataMonster)[1]
+                        if not stock and not price:
+                            print(f'Tidak ada data {nameMonster} yang diubah.')
+                        elif not stock:
+                            print(f'{nameMonster} telah berhasil diubah dengan harga baru {price}')
+                        elif not price:
+                            print(f'{nameMonster} telah berhasil diubah dengan stok baru sejumlah {stock}')
+                        else:
+                            print(f'{nameMonster} telah berhasil diubah dengan stok baru sejumlah {stock} dan dengan harga baru {price}')
                     else:
-                        print(f'{nameMonster} telah berhasil diubah dengan stok baru sejumlah {stock} dan dengan harga baru {price}')
-
+                        print('Tidak ada data monster yang dapat diubah...')
+                    break
                 elif option == 'potion':
                     # Menampilkan seluruh potion yang ada di shop 
                     displayPotionShop(dataItemShop)
-                    # Validasi input id potion
-                    while True:
-                        updateIdPotion = input('>>> Masukkan id potion: ')
-                        if isNum(updateIdPotion)==False:
-                            print('Id Potion tidak valid!')
-                        else:
-                            if 1<=int(updateIdPotion)<=len(dataItemShop)-1:
+
+                    if len(dataItemShop)-1>0:
+                        # Validasi input id potion
+                        while True:
+                            updateIdPotion:str = input('>>> Masukkan id potion: ')
+                            if isNum(updateIdPotion)==False:
+                                print('Id Potion tidak valid!')
+                            else:
+                                if 1<=int(updateIdPotion)<=len(dataItemShop)-1:
+                                    break
+                                else:
+                                    print('Id Potion tidak valid!')
+                        # Validasi stok baru
+                        while True:
+                            stock:str = input('>>> Masukkan stok baru: ')
+                            if isNum(stock) == True or not stock:
                                 break
                             else:
-                                print('Id Potion tidak valid!')
-                    # Validasi stok baru
-                    while True:
-                        stock = input('>>> Masukkan stok baru: ')
-                        if isNum(stock) == True or not stock:
-                            break
-                        else:
-                            print('Stok tidak valid')
-                    # Validasi harga baru
-                    while True:
-                        price = input('>>> Masukkan harga baru: ')
-                        if isNum(price) == True or not price:
-                            break
-                        else:
-                            print('Harga tidak valid')
-                    # Ubah data ke item_shop.csv
-                    namePotion = dataItemShop[int(updateIdPotion)][0]
-                    changeDataItem = [namePotion,stock,price]
-                    updateDataItem.append(changeDataItem)
+                                print('Stok tidak valid')
+                        # Validasi harga baru
+                        while True:
+                            price:str = input('>>> Masukkan harga baru: ')
+                            if isNum(price) == True or not price:
+                                break
+                            else:
+                                print('Harga tidak valid')
 
-                    if not stock and not price:
-                        print(f'Tidak ada data {namePotion} Potion yang diubah.')
-                    elif not stock:
-                        print(f'{namePotion} Potion telah berhasil diubah dengan harga baru {price}')
-                    elif not price:
-                        print(f'{namePotion} Potion telah berhasil diubah dengan stok baru sejumlah {stock}')
+                        # Update dataItemShop dengan data yang baru
+                        namePotion:str = dataItemShop[int(updateIdPotion)][0]
+                        dataItemShop:list = updateData(dataItemShop,namePotion,[namePotion,stock,price])
+                        if not stock and not price:
+                            print(f'Tidak ada data {namePotion.capitalize()} Potion yang diubah.')
+                        elif not stock:
+                            print(f'{namePotion.capitalize()} Potion telah berhasil diubah dengan harga baru {price}')
+                        elif not price:
+                            print(f'{namePotion.capitalize()} Potion telah berhasil diubah dengan stok baru sejumlah {stock}')
+                        else:
+                            print(f'{namePotion.capitalize()} Potion telah berhasil diubah dengan stok baru sejumlah {stock} dan dengan harga baru {price}')
                     else:
-                        print(f'{namePotion} Potion telah berhasil diubah dengan stok baru sejumlah {stock} dan dengan harga baru {price}')
+                        print('Tidak ada data potion yang dapat diubah...')
+                    break
                 else:
                     print('Input tidak valid!')
             
         elif action == 'hapus':
-            option = ''
-            while option!='monster' and option!='potion':
-                option = input('>>> Mau hapus apa? (monster/potion): ')
+            while True:
+                option:str = input('>>> Mau hapus apa? (monster/potion): ').lower()
                 if option == 'monster':
                     # Menampilkan seluruh monster yang ada di shop
                     displayMonsterShop(dataMonsterShop,dataMonster)
-                    # Validasi input id monster
-                    while True:
-                        delIdMonster = input('>>> Masukkan id monster: ')
-                        isValid = False
-                        for monster in dataMonsterShop:
-                            if monster[0] == delIdMonster:
-                                isValid = True
-                                break
-                        if isValid == True:
-                            break
-                        else:
-                            print('Id Monster tidak valid!')
-                    for i in range(len(dataMonster)):
-                        if dataMonster[i][0] == delIdMonster:
-                            nameMonster = dataMonster[i][1]
-                    # Validasi y/n delete
-                    while True:
-                        delete = input(f'>>> Apakah anda yakin ingin menghapus {nameMonster} dari shop (y/n)? ')
-                        if delete == 'y':
-                            # Menambahkan id monster yang dihapus ke deleteDataMonster
-                            deleteDataMonster.append(delIdMonster)
-                            print(f'{nameMonster} telah berhasil dihapus dari shop!')
-                            break
-                        elif delete == 'n':
-                            print(f'{nameMonster} tidak jadi Anda hapus.')
-                            break
-                        else:
-                            print('Input tidak valid!')
 
+                    if len(dataMonsterShop)-1>0:
+                        # Validasi input id monster
+                        while True:
+                            delIdMonster:str = input('>>> Masukkan id monster: ')
+                            isValid:bool = False
+                            for monster in dataMonsterShop:
+                                if monster[0] == delIdMonster:
+                                    isValid = True
+                                    break
+                            if isValid == True:
+                                break
+                            else:
+                                print('Id Monster tidak valid!')
+                        nameMonster:str = getInfoMonsterByIdMonster(delIdMonster,dataMonster)[1]
+
+                        # Validasi y/n delete
+                        while True:
+                            delete:str = input(f'>>> Apakah anda yakin ingin menghapus {nameMonster} dari shop (y/n)? ').lower()
+                            if delete == 'y':
+                                # Menghapus data monster pada shop yang memiliki delIdMonster
+                                dataMonsterShop = deleteData(dataMonsterShop,delIdMonster)
+                                print(f'{nameMonster} telah berhasil dihapus dari shop!')
+                                break
+                            elif delete == 'n':
+                                print(f'{nameMonster} tidak jadi Anda hapus.')
+                                break
+                            else:
+                                print('Input tidak valid!')
+                    else:
+                        print('Tidak ada data monster yang dapat dihapus...')
+                    break
                 elif option == 'potion':
                     # Menampilkan seluruh potion yang ada di shop 
                     displayPotionShop(dataItemShop)
-                    # Validasi input id potion
-                    while True:
-                        delIdPotion = input('>>> Masukkan id potion: ')
-                        if isNum(delIdPotion)==False:
-                            print('Id Potion tidak valid!')
-                        else:
-                            if 1<=int(delIdPotion)<=len(dataItemShop)-1:
+
+                    if len(dataItemShop)-1>0:
+                        # Validasi input id potion
+                        while True:
+                            delIdPotion:str = input('>>> Masukkan id potion: ')
+                            if isNum(delIdPotion)==False:
+                                print('Id Potion tidak valid!')
+                            else:
+                                if 1<=int(delIdPotion)<=len(dataItemShop)-1:
+                                    break
+                                else:
+                                    print('Id Potion tidak valid!')
+                        # Validasi y/n delete
+                        delNamePotion:str = dataItemShop[int(delIdPotion)][0]
+                        while True:
+                            delete:str = input(f'>>> Apakah anda yakin ingin menghapus {delNamePotion.capitalize()} Potion dari shop (y/n)? ').lower()
+                            if delete == 'y':
+                                print(f'{delNamePotion.capitalize()} Potion telah berhasil dihapus dari shop!')
+
+                                # Menghapus data potion pada shop yang memiliki delIdMonster
+                                dataItemShop:list = deleteData(dataItemShop,delNamePotion)
+                                break
+                            elif delete == 'n':
+                                print(f'{delNamePotion.capitalize()} Potion tidak jadi Anda hapus.')
                                 break
                             else:
-                                print('Id Potion tidak valid!')
-                    # Validasi y/n delete
-                    namePotion = dataItemShop[int(delIdPotion)][0]
-                    while True:
-                        delete = input(f'>>> Apakah anda yakin ingin menghapus {namePotion} Potion dari shop (y/n)? ')
-                        if delete == 'y':
-                            print(f'{namePotion} Potion telah berhasil dihapus dari shop!')
-                            # Menambahkan id monster yang dihapus ke deleteDataItem
-                            deleteDataItem.append(namePotion)
-                            break
-                        elif delete == 'n':
-                            print(f'{namePotion} Potion tidak jadi Anda hapus.')
-                            break
-                        else:
-                            print('Input tidak valid!')
+                                print('Input tidak valid!')
+                    else:
+                        print('Tidak ada data potion yang dapat dihapus...')
+                    break
                 else:
                     print('Input tidak valid!')
+        elif action == 'keluar':
+            print('Dadahh!')
+            break
         else:
             print('Aksi tidak valid!')
-
-        action = input('>>> Pilih aksi (lihat/tambah/ubah/hapus/keluar): ')
-    
-    print('Dadahh!')
-
-    # TES
-    print(f'Add Monster:\n{dataMonsterShop}')
-    print(f'Add Potion:\n{dataItemShop}')
-    print(f'Update Monster:\n{updateDataMonster}')
-    print(f'Update Item:\n{updateDataItem}')
-    print(f'Delete Monster:\n{deleteDataMonster}')
-    print(f'Delete Item:\n{deleteDataItem}')
 
 shopManagement(dataItemShop,dataMonsterShop,dataMonster)
