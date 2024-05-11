@@ -1,19 +1,19 @@
-import pandas as pd
-
-def load_users_from_csv(csv_file):
-    """Membaca data pengguna dari file CSV dan menyimpan dalam dictionary."""
-    df = pd.read_csv(csv_file)
-    users = {}
+def readCSV(path:str):
+    data = []
+    with open(path,'r') as file:
+        for line in file:
+            elmt = ''
+            row = []
+            for char in line:
+                if char == ";":
+                    row.append(elmt)
+                    elmt = ''
+                else:
+                    elmt = elmt + char
+            data.append(row)
+    return data
     
-    # Iterasi melalui setiap baris DataFrame dan simpan data pengguna dalam dictionary
-    for _, row in df.iterrows():
-        username = row['username']
-        password = row['password']
-        role = row['role']
-        # Simpan informasi pengguna dalam dictionary dengan username sebagai kunci
-        users[username] = {'password': password, 'role': role}
-    
-    return users
+users = readCSV('data/user.csv')
 
 def login(users, logged_in_user, username, password):
     """Menangani proses login dan mengembalikan pesan hasil login."""
@@ -37,13 +37,22 @@ def login(users, logged_in_user, username, password):
 
 def main():
     # Path ke file CSV
-    csv_file = 'user.csv'
+    csv_file = 'data/user.csv'
     
     # Membaca data pengguna dari file CSV
-    users = load_users_from_csv(csv_file)
+    users = readCSV(csv_file)
     
     # Variabel untuk menyimpan pengguna yang saat ini logged in
     logged_in_user = None
+
+    username = input("Username:")
+    password = input("Password:")
+    
+    # Memanggil fungsi login dengan input dari pengguna
+    result, logged_in_user = login(users, logged_in_user, username, password)
+    
+    # Mencetak pesan hasil login
+    print(result)
 
 if __name__ == '__main__':
     main()
