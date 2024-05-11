@@ -1,25 +1,10 @@
-sudah_register = False
+from CSV_Handler import *
+
+# read file CSV
+monster = readCSV("data\monster.csv")
+user = readCSV("data\user.csv")
 
 def Register():
-    # nge-read file CSV
-    def readCSV(path:str):
-        data = []
-        with open(path, 'r') as file:
-            for line in file:
-                elmt = ''
-                row = []
-                for char in line:
-                    if char == ';':
-                        row.append(elmt)
-                        elmt = ''
-                    else:
-                        elmt = elmt + char
-                data.append(row)
-        return data
-
-    monster = readCSV(r"C:\Users\ASUS\OneDrive\Documents\Tugas\Sem 2\Tugas Besar Daspro\if1210-2024-tubes-k05-d\data\monster.csv")
-    user = readCSV(r"C:\Users\ASUS\OneDrive\Documents\Tugas\Sem 2\Tugas Besar Daspro\if1210-2024-tubes-k05-d\data\user.csv")
-
     # input username & password
     username = input('Masukan Username: ')
     password = input('Masukan Password: ')
