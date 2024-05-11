@@ -43,22 +43,16 @@ def Register():
 
     # nge-print sesuai kondisi
     if username_valid(username) == False:
-        print('')
-        print('Username hanya boleh berisi alfabet, angka, underscore, dan strip!')
+        print('\nUsername hanya boleh berisi alfabet, angka, underscore, dan strip!')
     elif username_unik(username) == False:
-        print('')
-        print('Username',username,'sudah terpakai, silakan gunakan username lain!')
+        print('\nUsername',username,'sudah terpakai, silakan gunakan username lain!')
     else:
         # pilih monster
-        print('')
-        print('Silakan pilih salah satu monster sebagai monster awalmu')
-        print('')
+        print('\nSilakan pilih salah satu monster sebagai monster awalmu\n')
         for i in range(1,len(monster)):
             print(f'{i}. {monster[i][1]}')
-        print('')
-        monster_pilihan = int(input('Monster pilihanmu: '))
-        print('')
-        print(f'Selamat datang Agent {username}. Mari kita mengalahkan Dr. Asep Spakbor dengan {monster[monster_pilihan][1]}!')
+        monster_pilihan = int(input('\nMonster pilihanmu: '))
+        print(f'\nSelamat datang Agent {username}. Mari kita mengalahkan Dr. Asep Spakbor dengan {monster[monster_pilihan][1]}!')
 
         # role dan OWCA coin awal
         role = 'agent'
