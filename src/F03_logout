@@ -1,0 +1,8 @@
+def logout(logged_in_user):
+    """Menangani proses logout dan mencetak pesan hasil logout."""
+    # Periksa apakah ada pengguna yang saat ini logged in
+    if logged_in_user is not None:
+        print("Logout berhasil untuk", logged_in_user + ".")
+    else:
+        print("Logout gagal!")
+        print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
