@@ -68,11 +68,11 @@ def isNum(x:str) -> bool:
             return False
     return True
 
-# Mendapatkan data monster berdasarkan id monster
-def getInfoMonsterByIdMonster(idMonster:str,dataMonster:list) -> list: 
-    for monster in dataMonster:
-        if monster[0] == idMonster:
-            return monster
+# Mendapatkan data berdasarkan ID
+def getDataById(id:str,data:str) -> list:
+    for row in data:
+        if row[0] == id:
+            return row
 
 # Menghapus data
 def deleteData(dataX:list,delId:str) -> list:
@@ -92,3 +92,21 @@ def updateData(dataX:list,updateIdX:str,newData:list) -> list:
                     data[i] = str(newData[i])
         updateData.append(data)
     return updateData
+
+# get New Id
+def newId(data:list) -> int:
+    maxID:int = 0
+    for row in data[1:]:
+        if int(row[0])>maxID:
+            maxID = int(row[0])
+    return maxID+1
+
+# Load bayangan
+def load():
+    dataUser = readCSV('data/user.csv')
+    dataMonster = readCSV('data/monster.csv')
+    dataMonsterInventory = readCSV('data/monster_inventory.csv')
+    dataItemInventory = readCSV('data/item_inventory.csv')
+    dataMonsterShop = readCSV('data/monster_shop.csv')
+    dataItemShop = readCSV('data/item_shop.csv')
+    return dataUser, dataMonster, dataMonsterInventory, dataItemInventory, dataMonsterShop, dataItemShop

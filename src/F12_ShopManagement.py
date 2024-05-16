@@ -39,7 +39,7 @@ def displayMonsterShop(dataMonsterShop:list,dataMonster:list):
         print(f"{'ID':<3} | {'Type':<15} | {'ATK Power':<9} | {'DEF Power':<9} | {'HP':<5} | {'Stok':<5} | Harga")
         for monster in dataMonsterShop[1:]:
             idMonster:str = monster[0]
-            infoMonster:list = getInfoMonsterByIdMonster(idMonster,dataMonster)
+            infoMonster:list = getDataById(idMonster,dataMonster)
             print(f"{infoMonster[0]:<3} | {infoMonster[1]:<15} | {infoMonster[2]:<9} | {infoMonster[3]:<9} | {infoMonster[4]:<5} | {monster[1]:<5} | {monster[2]}")
     else:
         print('Tidak ada data monster pada shop...')
@@ -199,7 +199,7 @@ def shopManagement(dataItemShop:list,dataMonsterShop:list,dataMonster:list):
                         # Update dataMonsterShop dengan data yang baru
                         dataMonsterShop:list = updateData(dataMonsterShop,updateIdMonster,[updateIdMonster,stock,price])
 
-                        nameMonster:str = getInfoMonsterByIdMonster(updateIdMonster,dataMonster)[1]
+                        nameMonster:str = getDataById(updateIdMonster,dataMonster)[1]
                         if not stock and not price:
                             print(f'Tidak ada data {nameMonster} yang diubah.')
                         elif not stock:
@@ -278,7 +278,7 @@ def shopManagement(dataItemShop:list,dataMonsterShop:list,dataMonster:list):
                                 break
                             else:
                                 print('Id Monster tidak valid!')
-                        nameMonster:str = getInfoMonsterByIdMonster(delIdMonster,dataMonster)[1]
+                        nameMonster:str = getDataById(delIdMonster,dataMonster)[1]
 
                         # Validasi y/n delete
                         while True:

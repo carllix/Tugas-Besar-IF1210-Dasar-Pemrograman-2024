@@ -1,61 +1,70 @@
-from CSV_Handler import *
+from Important_Function import *
 
-# read file CSV
-monster = readCSV(r"C:\Users\ASUS\OneDrive\Documents\Tugas\Sem 2\Tugas Besar Daspro\if1210-2024-tubes-k05-d\data\monster.csv")
-user = readCSV(r"C:\Users\ASUS\OneDrive\Documents\Tugas\Sem 2\Tugas Besar Daspro\if1210-2024-tubes-k05-d\data\user.csv")
+# Validasi Username
+def username_valid(username):
+    for char in username:
+        if not(97<=ord(char)<=122 or 65<=ord(char)<=90 or 48<=ord(char)<=57 or ord(char)==95 or ord(char)==45):
+            return False
+    return True
 
-data_register = []
+# Validasi Keunikan Username
+def username_unik(username,dataUser):
+    for user in dataUser:
+        if user[1] == username:
+            return False
+    return True
 
-def Register():
-
-    if len(data_register) == 0:
-        # input username & password
-        username = input('Masukan Username: ')
-        password = input('Masukan Password: ')
-
-        while len(password) == 0:
-            password = input('Password tidak boleh kosong, Masukan Password: ')
-
-        # validasi username
-        def username_valid(x):
-            for i in range(len(username)):
-                if username[i] not in ('-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'):
-                    return False
+# Validasi Id Monster
+def isIdExist(monster_pilihan,dataMonster):
+    for monster in dataMonster:
+        if monster[0] == monster_pilihan:
             return True
+    return False
 
-        # validasi keunikan username
-        def username_unik(x):
-            for i in range(len(user)):
-                if user[i][1] == username:
-                    return False
-            return True
-
-        # nge-print sesuai kondisi
-        if username_valid(username) == False:
-            print('\nUsername hanya boleh berisi alfabet, angka, underscore, dan strip!')
-        elif username_unik(username) == False:
-            print('\nUsername',username,'sudah terpakai, silakan gunakan username lain!')
-        else:
-            # pilih monster
-            print('\nSilakan pilih salah satu monster sebagai monster awalmu\n')
-            for i in range(1,len(monster)):
-                print(f'{i}. {monster[i][1]}')
-            monster_pilihan = int(input('\nMonster pilihanmu: '))
-            print(f'\nSelamat datang Agent {username}. Mari kita mengalahkan Dr. Asep Spakbor dengan {monster[monster_pilihan][1]}!')
-
-            # menyimpan username, password, role, dan OWCA dalam list
-            data_register.append(username)
-            data_register.append(password)
-            data_register.append('agent')
-            data_register.append('0')
-
-    # kondisi jika register gagal
-    else:
+# F01 - REGISTER
+def register(dataUser,isLogin,username):
+    if isLogin==True:
         print('Register gagal')
-        print('Anda telah login dengan username',data_register[0],'silakan lakukan "LOGOUT" sebelum melakukan register.')
+        print(f'Anda telah login dengan username {username} silakan lakukan "LOGOUT" sebelum melakukan register.\n')
+    else:
+        # Validasi Username dan Password
+        while True:
+            print('===========================================================================================================')
+            print('''
+█▀█ █▀▀ █▀▀ █ █▀ ▀█▀ █▀▀ █▀█
+█▀▄ ██▄ █▄█ █ ▄█ ░█░ ██▄ █▀▄''')
+            print('\n===========================================================================================================')
+            
+            # Input Username & Password
+            username = input('Masukan Username: ')
+            password = input('Masukan Password: ')
 
-program = True
-while program:    
-    fungsi = input('\n>>> ')
-    if fungsi == "REGISTER":
-        Register()
+            if not username:
+                print('\nUsername tidak boleh kosong!\n')
+            elif not password:
+                print('\nPassword tidak boleh kosong!\n')
+            elif username_valid(username) == False:
+                print('\nUsername hanya boleh berisi alfabet, angka, underscore, dan strip!\n')
+            elif username_unik(username,dataUser) == False:
+                print(f'\nUsername {username} sudah terpakai, silakan gunakan username lain!\n')
+            else:
+                break
+        
+        # Pilih Monster
+        print('\nSilakan pilih salah satu monster sebagai monster awalmu!')
+        # Menampilkan List Monster
+        for monster in dataMonster[1:]:
+            print(f'{monster[0]}. {monster[1]}')
+
+        # Validasi Input pilihan monster
+        while True:
+            monster_pilihan = input('\nMonster pilihanmu: ')
+            if isIdExist(monster_pilihan,dataMonster) == True:
+                # Menambahkan data user baru
+                UserId = newId(dataUser)
+                newUser = [str(UserId),username,password,'agent','0']
+                dataUser.append(newUser)
+                print(f'\nSelamat datang Agent {username}. Mari kita mengalahkan Dr. Asep Spakbor dengan {getDataById(monster_pilihan,dataMonster)[1]}!')
+                break
+            else:
+                print('Pilihan Tidak Valid')

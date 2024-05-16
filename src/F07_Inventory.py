@@ -1,4 +1,4 @@
-from CSV_Handler import *
+from Important_Function import *
 
 # READ CSV
 dataMonster = readCSV('data/monster.csv')
@@ -17,12 +17,6 @@ def isNum(x:str) -> bool:
             return False
     return True
 
-# Mendapatkan data monster berdasarkan id monster
-def getInfoMonsterByIdMonster(idMonster:str,dataMonster:list) -> list: 
-    for monster in dataMonster:
-        if monster[0] == idMonster:
-            return monster
-
 # F07 - Inventory
 def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,userId:str):
     print(f'============ INVENTORY LIST (User ID: {userId}) ============')
@@ -40,7 +34,7 @@ def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,
             listInventory.append(['Monster',idMonster,level])
 
             # Display
-            infoMonster:list = getInfoMonsterByIdMonster(idMonster,dataMonster)
+            infoMonster:list = getDataById(idMonster,dataMonster)
             print(f'{idx}.{"":<2}{"Monster":<14} (Name: {infoMonster[1]}, Lvl: {level}, HP: {infoMonster[4]})')
             idx+=1
 
@@ -81,7 +75,7 @@ def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,
                 detailItem:list = listInventory[int(id)-1]
                 if detailItem[0] == 'Monster':
                     idMonster:str = detailItem[1]
-                    infoMonster:list = getInfoMonsterByIdMonster(idMonster,dataMonster)
+                    infoMonster:list = getDataById(idMonster,dataMonster)
                     print(f'{"Name":<11}: {infoMonster[1]}')
                     print(f'{"ATK Power":<11}: {infoMonster[2]}')
                     print(f'{"DEF Power":<11}: {infoMonster[3]}')

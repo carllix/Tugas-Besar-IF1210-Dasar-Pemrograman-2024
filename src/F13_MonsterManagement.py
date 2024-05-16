@@ -1,4 +1,4 @@
-from CSV_Handler import *
+from Important_Function import *
 
 # READ CSV FILE
 dataMonster = readCSV('data/monster.csv')

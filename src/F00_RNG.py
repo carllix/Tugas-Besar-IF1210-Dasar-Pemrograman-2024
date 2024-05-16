@@ -16,4 +16,3 @@ def getRandomNumber(range: Optional[Tuple[int,int]] = None) -> int:
     if range is None:
         range = [0,m-1]
     return int((xn/(m-1)) * (range[1] - range[0]) + range[0])
-
