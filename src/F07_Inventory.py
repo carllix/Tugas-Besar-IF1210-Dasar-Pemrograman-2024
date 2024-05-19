@@ -1,26 +1,15 @@
-from Important_Function import *
+from src.Important_Function import *
 
-# READ CSV
-dataMonster = readCSV('data/monster.csv')
-dataItemInventory = readCSV('data/item_inventory.csv')
-dataMonsterInventory = readCSV('data/monster_inventory.csv')
-
-# Nanti userId dan oc ambil dari login (return dataUser)
-userId = '2'
-oc = '9999'
-
-def isNum(x:str) -> bool:
-    if not x: # Kasus string kosong
-        return False
-    for char in x:
-        if ord(char)<48 or ord(char)>57:
-            return False
-    return True
-
-# F07 - Inventory
-def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,userId:str):
-    print(f'============ INVENTORY LIST (User ID: {userId}) ============')
-    print(f'Jumlah O.W.C.A Coin-mu sekarang {oc}.')
+# F07 - INVENTORY
+def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,userId:int,coin:int,username:str):
+    print('\n=================================================================================================================')
+    print('''
+                        ▀█▀ ░█▄─░█ ░█──░█ ░█▀▀▀ ░█▄─░█ ▀▀█▀▀ ░█▀▀▀█ ░█▀▀█ ░█──░█ 
+                        ░█─ ░█░█░█ ─░█░█─ ░█▀▀▀ ░█░█░█ ─░█── ░█──░█ ░█▄▄▀ ░█▄▄▄█ 
+                        ▄█▄ ░█──▀█ ──▀▄▀─ ░█▄▄▄ ░█──▀█ ─░█── ░█▄▄▄█ ░█─░█ ──░█──''')
+    print('\n=================================================================================================================')
+    print(f'\n============ INVENTORY LIST (User ID: {userId}) ============')
+    print(f'Jumlah O.W.C.A Coin-mu sekarang {coin}.')
     
     listInventory:list = []
 
@@ -28,7 +17,7 @@ def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,
     idx:int = 1
     # LIST MONSTER
     for monster in dataMonsterInventory:
-        if monster[0] == userId:
+        if monster[0] == str(userId):
             idMonster:str = monster[1]
             level:str = monster[2]
             listInventory.append(['Monster',idMonster,level])
@@ -40,7 +29,7 @@ def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,
 
     # LIST POTION
     for item in dataItemInventory:
-        if item[0] == userId and item[1]!='monster_ball':
+        if item[0] == str(userId) and item[1]!='monster_ball':
             listInventory.append(['Potion',item[1],item[2]])
 
             # Display
@@ -49,7 +38,7 @@ def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,
 
     # LIST MONSTER BALL
     for item in dataItemInventory[1:]:
-        if item[0] == userId and item[1]=='monster_ball':
+        if item[0] == str(userId) and item[1]=='monster_ball':
             listInventory.append(['Monster Ball',item[1],item[2]])
 
             # Display
@@ -58,33 +47,34 @@ def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,
 
     while True:
         # Input id untuk menampilkan detail item
-        print('\nKetikkan id untuk menampilkan detail item:')
-        id:str = input('>>> ').upper()
+        print('\nKetikkan id untuk menampilkan detail item :')
+        print('(Ketik "KELUAR" jika ingin keluar dari INVENTORY)')
+        id:str = input('\n>>> ').upper()
         
         # Mekanisme untuk keluar dari inventory
         if id == 'KELUAR':
+            print(f'\nSampai Jumpa Lagi Admin {username} !!!')
             break
-
-        # Validasi input id
-        if isNum(id)==False:
-            print('id tidak valid!')
         else:
-            if int(id)<1 or int(id)>len(listInventory):
+            # Validasi input id
+            if isNum(id)==False:
                 print('id tidak valid!')
             else:
-                detailItem:list = listInventory[int(id)-1]
-                if detailItem[0] == 'Monster':
-                    idMonster:str = detailItem[1]
-                    infoMonster:list = getDataById(idMonster,dataMonster)
-                    print(f'{"Name":<11}: {infoMonster[1]}')
-                    print(f'{"ATK Power":<11}: {infoMonster[2]}')
-                    print(f'{"DEF Power":<11}: {infoMonster[3]}')
-                    print(f'{"HP":<11}: {infoMonster[4]}')
-                    print(f'{"Level":<11}: {detailItem[2]}')
-                elif detailItem[0] == 'Potion':
-                    print(f'{"Type":<11}: {detailItem[1].capitalize()}')
-                    print(f'{"Quantitiy":<11}: {detailItem[2]}')
+                if int(id)<1 or int(id)>len(listInventory):
+                    print('id tidak valid!')
                 else:
-                    print(f'{"Quantitiy":<11}: {detailItem[2]}')
-
-inventory(dataMonster,dataItemInventory,dataMonsterInventory,userId)
+                    detailItem:list = listInventory[int(id)-1]
+                    print(f'\n{detailItem[0]}')
+                    if detailItem[0] == 'Monster':
+                        idMonster:str = detailItem[1]
+                        infoMonster:list = getDataById(idMonster,dataMonster)
+                        print(f'{"Name":<11}: {infoMonster[1]}')
+                        print(f'{"ATK Power":<11}: {infoMonster[2]}')
+                        print(f'{"DEF Power":<11}: {infoMonster[3]}')
+                        print(f'{"HP":<11}: {infoMonster[4]}')
+                        print(f'{"Level":<11}: {detailItem[2]}')
+                    elif detailItem[0] == 'Potion':
+                        print(f'{"Type":<11}: {detailItem[1].capitalize()}')
+                        print(f'{"Quantitiy":<11}: {detailItem[2]}')
+                    else:
+                        print(f'{"Quantitiy":<11}: {detailItem[2]}')

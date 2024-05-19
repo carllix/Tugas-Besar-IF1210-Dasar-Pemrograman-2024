@@ -1,15 +1,15 @@
 # F03 - LOGOUT
-def logout(isLogin,userId,username,coin,role):
+def logout(isLogin:bool,userId:int,username:str,coin:int,role:str):
     # Periksa Apakah Pengguna Sudah Login
     if isLogin == True:
-        print(f'Anda Berhasil Logout dari Akun dengan username {username}.\n')
-        isLogin = False
-        userId = 0
-        username = ''
-        coin = 0
-        role = ''
+        print(f'\nAnda Berhasil Logout dari Akun dengan username {username}.\n')
+        isLogin:bool = False
+        userId:int = 0
+        username:str = ''
+        coin:int = 0
+        role:str = ''
         return isLogin,userId,username,coin,role
     else:
-        print('Logout gagal!')
+        print('\nLogout gagal!')
         print('Anda belum login, silahkan lakukan "LOGIN" terlebih dahulu sebelum melakukan logout.\n')
         return isLogin,userId,username,coin,role

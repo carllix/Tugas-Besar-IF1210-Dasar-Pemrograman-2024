@@ -1,64 +1,3 @@
-# Membaca CSV File sebagai matriks
-def readCSV(path:str) -> list:
-    data:list = []
-    with open(path,'r') as file:
-        for line in file:
-            elmt:str = ''
-            row:list = []
-            for char in line:
-                if char == ';' or char == '\n':
-                    row.append(elmt)
-                    elmt = ''
-                else:
-                    elmt = elmt + char 
-            data.append(row)
-    return data
-# # CONTOH APLIKASI
-# readCSV('data/monster.csv')
-
-# Menulis matriks ke CSV file
-def writeCSV(path:str,data:list):
-    with open(path, 'a') as file:
-        row:str = ''
-        for i, elmt in enumerate(data):
-            row += str(elmt)
-            if i < len(data) - 1:
-                row += ';'
-        file.write(row + '\n')
-# # CONTOH APLIKASI
-# writeCSV('data/item_shop.csv',['healing',3,20])
-
-# Memperbarui CSV
-def updateCSV(path:str,dataId:str,newData:list):
-    data:list = readCSV(path)
-    updated_data:str = []
-    for row in data:
-        if row[0] == str(dataId):
-            for i in range(1, len(newData)):  
-                if newData[i] != '': 
-                    row[i] = str(newData[i])
-        updated_data.append(row)
-
-    with open(path, 'w') as file:
-        for row in updated_data:
-            writeCSV(path, row)
-# # CONTOH APLIKASI
-# updateCSV('data/monster_shop.csv', 3, [3,'',101])
-
-# DELETE DATA CSV
-# def deleteData(path:str,dataId:int):
-#     data = readCSV(path)
-#     updated_data = []
-#     for row in data:
-#         if row[0] != str(dataId):
-#             updated_data.append(row)
-    
-#     with open(path, 'w') as file:
-#         for row in updated_data:
-#             writeCSV(path, row)
-# CONTOH APLIKASI
-# deleteData('data/monster_shop.csv',3)
-
 # Mengecek apakah angka
 def isNum(x:str) -> bool:
     if not x: # Kasus string kosong
@@ -101,12 +40,24 @@ def newId(data:list) -> int:
             maxID = int(row[0])
     return maxID+1
 
-# Load bayangan
-def load():
-    dataUser = readCSV('data/user.csv')
-    dataMonster = readCSV('data/monster.csv')
-    dataMonsterInventory = readCSV('data/monster_inventory.csv')
-    dataItemInventory = readCSV('data/item_inventory.csv')
-    dataMonsterShop = readCSV('data/monster_shop.csv')
-    dataItemShop = readCSV('data/item_shop.csv')
-    return dataUser, dataMonster, dataMonsterInventory, dataItemInventory, dataMonsterShop, dataItemShop
+# Menampilkan monster yang terdaftar di Shop
+def displayMonsterShop(dataMonsterShop:list,dataMonster:list):
+    if len(dataMonsterShop)-1>0:
+        print(f"\n{'ID':<3} | {'Type':<15} | {'ATK Power':<9} | {'DEF Power':<9} | {'HP':<5} | {'Stok':<5} | Harga")
+        for monster in dataMonsterShop[1:]:
+            idMonster:str = monster[0]
+            infoMonster:list = getDataById(idMonster,dataMonster)
+            print(f"{infoMonster[0]:<3} | {infoMonster[1]:<15} | {infoMonster[2]:<9} | {infoMonster[3]:<9} | {infoMonster[4]:<5} | {monster[1]:<5} | {monster[2]}")
+    else:
+        print('\nTidak ada data monster pada shop...')
+
+# Menampilkan potion yang terdaftar di Shop
+def displayPotionShop(dataItemShop:list):
+    if len(dataItemShop)-1>0:
+        print(f"\n{'ID':<3} | {'Type':<20} | {'Stok':<5} | Harga")
+        i = 1
+        for potion in dataItemShop[1:]:
+            print(f"{i:<3} | {f'{potion[0].capitalize()} Potion':<20} | {potion[1]:<5} | {potion[2]}")
+            i+=1
+    else:
+        print('\nTidak ada data potion pada shop...')

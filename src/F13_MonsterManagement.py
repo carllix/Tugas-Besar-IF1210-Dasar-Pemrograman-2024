@@ -1,22 +1,4 @@
-from Important_Function import *
-
-# READ CSV FILE
-dataMonster = readCSV('data/monster.csv')
-
-def isNum(x:str) -> bool:
-    if not x: # Kasus string kosong
-        return False
-    for char in x:
-        if ord(char)<48 or ord(char)>57:
-            return False
-    return True
-
-def maxIDMonster(dataMonster:list) -> int:
-    maxID:int = 0
-    for monster in dataMonster[1:]:
-        if int(monster[0])>maxID:
-            maxID = int(monster[0])
-    return maxID
+from src.Important_Function import *
 
 def foundMonster(dataMonster:list, newMonster:str) -> bool:
     for monster in dataMonster:
@@ -26,18 +8,18 @@ def foundMonster(dataMonster:list, newMonster:str) -> bool:
 
 def displayMonster(dataMonster:list):
     if len(dataMonster)-1>0:
-        print(f"{'ID':<3} | {'Type':<15} | {'ATK Power':<9} | {'DEF Power':<9} | HP")
+        print(f"\n{'ID':<3} | {'Type':<15} | {'ATK Power':<9} | {'DEF Power':<9} | {'HP':<8} |")
         for i in range(1,len(dataMonster)):
-            print(f"{dataMonster[i][0]:<3} | {dataMonster[i][1]:<15} | {dataMonster[i][2]:<9} | {dataMonster[i][3]:<9} | {dataMonster[i][4]}")
+            print(f"{dataMonster[i][0]:<3} | {dataMonster[i][1]:<15} | {dataMonster[i][2]:<9} | {dataMonster[i][3]:<9} | {dataMonster[i][4]:<8} |")
     else:
-        print('Tidak ada data yang dapat ditampilkan...')
+        print('\nTidak ada data yang dapat ditampilkan...')
 
 def addMonster(dataMonster:list):
-    print('Memulai pembuatan monster baru\n')
+    print('\nMemulai pembuatan monster baru')
 
     # Validasi input monster type
     while True:
-        newType:str = input('>>> Masukkan Type / Nama : ').title()
+        newType:str = input('\n>>> Masukkan Type / Nama : ').title()
         if isNum(newType) == True:
             print('Nama harus string, coba lagi!')
         elif foundMonster(dataMonster, newType) == False:
@@ -47,7 +29,7 @@ def addMonster(dataMonster:list):
     
     # Validasi ATK Power
     while True:
-        newATKPower:str = input('>>> Masukkan ATK Power : ')
+        newATKPower:str = input('\n>>> Masukkan ATK Power : ')
         if isNum(newATKPower) == True:
             break
         else:
@@ -55,7 +37,7 @@ def addMonster(dataMonster:list):
 
     # Validasi DEF Power
     while True:
-        newDEFPower:str = input('>>> Masukkan DEF Power (0-50) : ')
+        newDEFPower:str = input('\n>>> Masukkan DEF Power (0-50) : ')
         if isNum(newDEFPower) == True:
             if 0<=int(newDEFPower)<=50:
                 break
@@ -66,14 +48,14 @@ def addMonster(dataMonster:list):
     
     # Validasi HP
     while True:
-        newHP:str = input('>>> Masukkan HP : ')
+        newHP:str = input('\n>>> Masukkan HP : ')
         if isNum(newHP) == True:
             break
         else:
             print('Masukkan input bertipe Integer, coba lagi!')
 
     # Menampilkan Data Monster Baru
-    print('Monster baru berhasil dibuat!')
+    print('\nMonster baru berhasil dibuat!')
     print(f'Type\t\t: {newType}')
     print(f'ATK Power\t: {newATKPower}')
     print(f'DEF Power\t: {newDEFPower}')
@@ -81,35 +63,39 @@ def addMonster(dataMonster:list):
 
     # Konfirmasi tambah data ke dalam database
     while True:
-        confirm:str = input('>>> Tambahkan Monster ke database (Y/N) : ').upper()
+        confirm:str = input('\n>>> Tambahkan Monster ke database (Y/N) : ').upper()
         if confirm == 'Y':
-            newMonster:list = [maxIDMonster(dataMonster)+1,newType,newATKPower,newDEFPower,newHP]
+            newMonster:list = [str(newId(dataMonster)),newType,newATKPower,newDEFPower,newHP]
             dataMonster.append(newMonster)
-            print('Monster baru telah ditambahkan!')
+            print('\nMonster baru telah ditambahkan!')
             break
         elif confirm =='N':
-            print('Monster gagal ditambahkan!')
+            print('\nMonster gagal ditambahkan!')
             break
         else:
-            print('Konfirmasi tidak valid!')
+            print('\nKonfirmasi tidak valid!')
 
-# F13 - Monster Management
-def monsterManagement(dataMonster:list):
-    print('SELAMAT DATANG DI DATABASE PARA MONSTER !!!')
-    print('1. Tampilkan semua Monster')
+# F13 - MONSTER MANAGEMENT
+def monsterManagement(dataMonster:list,username:str):
+    print('\n=================================================================================================================')
+    print('''
+░█▀▄▀█ ░█▀▀▀█ ░█▄─░█ ░█▀▀▀█ ▀▀█▀▀ ░█▀▀▀ ░█▀▀█ 　 ░█▀▄▀█ ─█▀▀█ ░█▄─░█ ─█▀▀█ ░█▀▀█ ░█▀▀▀ ░█▀▄▀█ ░█▀▀▀ ░█▄─░█ ▀▀█▀▀ 
+░█░█░█ ░█──░█ ░█░█░█ ─▀▀▀▄▄ ─░█── ░█▀▀▀ ░█▄▄▀ 　 ░█░█░█ ░█▄▄█ ░█░█░█ ░█▄▄█ ░█─▄▄ ░█▀▀▀ ░█░█░█ ░█▀▀▀ ░█░█░█ ─░█── 
+░█──░█ ░█▄▄▄█ ░█──▀█ ░█▄▄▄█ ─░█── ░█▄▄▄ ░█─░█ 　 ░█──░█ ░█─░█ ░█──▀█ ░█─░█ ░█▄▄█ ░█▄▄▄ ░█──░█ ░█▄▄▄ ░█──▀█ ─░█──''')
+    print('\n=================================================================================================================')
+    print(f'\nSELAMAT DATANG DI DATABASE PARA MONSTER {username} !!!')
+    print('\n1. Tampilkan Semua Monster')
     print('2. Tambah Monster baru')
     print('3. Keluar')
 
     while True:
-        action:str = input('>>> Pilih Aksi (1/2/3): ')
+        action:str = input('\n>>> Pilih Aksi (1/2/3): ')
         if action == '1':
             displayMonster(dataMonster)
         elif action == '2':
             addMonster(dataMonster)
         elif action == '3':
-            print('Dadahhhh!')
+            print(f'\nSampai Jumpa Lagi {username} !!!')
             break
         else:
             print('Aksi tidak valid!')
-
-monsterManagement(dataMonster)
