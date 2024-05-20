@@ -36,3 +36,9 @@ Tugas besar ini dikerjakan dengan sepenuh hati oleh Kelompok D K-05 untuk memenu
 
 
 # How to Run
+1. Clone this repository to your local computer
+2. Run in your terminal "python main.py (Default)" to load the game
+![alt text](image.png)
+3. Enjoy the game! :b
+4. You can also save your game data by using "SAVE" command
+![alt text](image-1.png)
