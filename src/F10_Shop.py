@@ -41,7 +41,7 @@ def shop(dataMonster:list,dataMonsterShop:list,dataItemShop:list,dataMonsterInve
                     print('Pilihan tidak valid!')
 
         elif action == 'BELI':
-            print(f'\nJumlah O.W.C.A. Coin-mu sekarang {coin}.')
+            print(f'\nJumlah O.W.C.A. Coin-mu sekarang {coin} OC.')
             while True:
                 option = input('\n>>> Mau beli apa? (MONSTER/POTION): ').upper()
                 if option == 'MONSTER':
@@ -118,7 +118,10 @@ def shop(dataMonster:list,dataMonsterShop:list,dataItemShop:list,dataMonsterInve
                                 if 1<=quantity<=stock:
                                     break
                                 elif quantity>stock:
-                                    print(f'Stok {namePotion} Potion pada shop tidak mencukupi')
+                                    if stock == 0:
+                                        break
+                                    else:
+                                        print(f'Stok {namePotion} Potion pada shop tidak mencukupi')
                                 else:
                                     print('Jumlah tidak valid!')
                         
@@ -153,3 +156,5 @@ def shop(dataMonster:list,dataMonsterShop:list,dataItemShop:list,dataMonsterInve
             break
         else:
             print('\nAksi tidak valid!')
+    
+    return coin

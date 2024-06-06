@@ -338,3 +338,5 @@ def shopManagement(dataPotion:list,dataItemShop:list,dataMonsterShop:list,dataMo
             break
         else:
             print('Aksi tidak valid!')
+
+    return dataItemShop,dataMonsterShop

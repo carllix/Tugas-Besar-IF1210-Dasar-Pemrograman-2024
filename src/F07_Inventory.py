@@ -9,7 +9,7 @@ def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,
                         ▄█▄ ░█──▀█ ──▀▄▀─ ░█▄▄▄ ░█──▀█ ─░█── ░█▄▄▄█ ░█─░█ ──░█──''')
     print('\n=================================================================================================================')
     print(f'\n============ INVENTORY LIST (User ID: {userId}) ============')
-    print(f'Jumlah O.W.C.A Coin-mu sekarang {coin}.')
+    print(f'Jumlah O.W.C.A Coin-mu sekarang {coin} OC.')
     
     listInventory:list = []
 
@@ -53,7 +53,7 @@ def inventory(dataMonster:list,dataItemInventory:list,dataMonsterInventory:list,
         
         # Mekanisme untuk keluar dari inventory
         if id == 'KELUAR':
-            print(f'\nSampai Jumpa Lagi Admin {username} !!!')
+            print(f'\nSampai Jumpa Lagi Agent {username} !!!')
             break
         else:
             # Validasi input id

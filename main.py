@@ -96,3 +96,8 @@ while True:
         exit(dataUser, dataMonster, dataMonsterInventory, dataItemInventory, dataMonsterShop, dataItemShop)
     else:
         print('Command tidak valid. Silahkan masukkan command "HELP" untuk daftar command yang dapat kamu panggil.')
+    
+    # Ubah coin user pada dataUser
+    for data in dataUser:
+        if data[0] == str(userId):
+            data[4] = coin
